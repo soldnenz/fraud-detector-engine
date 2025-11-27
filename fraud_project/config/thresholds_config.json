@@ -1,0 +1,23 @@
+{
+  "segments": [
+    {
+      "name": "high_amount",
+      "condition": "amount >= 1000000",
+      "threshold_fraud": 0.70,
+      "threshold_review": 0.50
+    },
+    {
+      "name": "new_target_high_risk",
+      "condition": "is_new_target_for_client == 1 and target_fraud_rate_past_smooth > 0.02",
+      "threshold_fraud": 0.75,
+      "threshold_review": 0.55
+    },
+    {
+      "name": "default",
+      "condition": "True",
+      "threshold_fraud": 0.85,
+      "threshold_review": 0.65
+    }
+  ]
+}
+

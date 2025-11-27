@@ -1,0 +1,136 @@
+{
+  "derived_features": [
+    {
+      "name": "log_amount",
+      "type": "transform",
+      "input": "amount",
+      "operation": "log1p"
+    },
+    {
+      "name": "sqrt_amount",
+      "type": "transform",
+      "input": "amount",
+      "operation": "sqrt"
+    },
+    {
+      "name": "cst_amount_deviation",
+      "type": "diff",
+      "inputs": ["amount", "cst_amount_mean_past"]
+    },
+    {
+      "name": "cst_amount_deviation_ratio",
+      "type": "ratio",
+      "numerator": "cst_amount_deviation",
+      "denominator": "cst_amount_mean_past",
+      "eps": 1.0
+    },
+    {
+      "name": "is_high_amount_global",
+      "type": "flag_percentile",
+      "input": "amount",
+      "percentile": 99
+    },
+    {
+      "name": "is_high_amount_vs_client",
+      "type": "flag_threshold_ratio",
+      "ratio_feature": "amount_over_mean_past",
+      "threshold": 5.0
+    },
+    {
+      "name": "sessions_7d_vs_30d_ratio",
+      "type": "ratio",
+      "numerator": "sessions_unique_7d",
+      "denominator": "sessions_unique_30d",
+      "eps": 1.0
+    },
+    {
+      "name": "logins_7d_vs_30d_ratio",
+      "type": "ratio",
+      "numerator": "daily_logins_avg_7d",
+      "denominator": "daily_logins_avg_30d",
+      "eps": 1.0
+    },
+    {
+      "name": "is_login_spike",
+      "type": "flag_comparison",
+      "left": "daily_logins_avg_7d",
+      "right": "daily_logins_avg_30d",
+      "operation": ">",
+      "multiplier": 2.0
+    },
+    {
+      "name": "amount_x_new_target",
+      "type": "product",
+      "inputs": ["amount", "is_new_target_for_client"]
+    },
+    {
+      "name": "amount_x_high_fraud_rate",
+      "type": "product",
+      "inputs": ["amount", "target_fraud_rate_past_smooth"]
+    },
+    {
+      "name": "night_x_high_amount",
+      "type": "product",
+      "inputs": ["is_night_tx", "is_high_amount_vs_client"]
+    },
+    {
+      "name": "new_device_x_high_amount",
+      "type": "product",
+      "inputs": ["is_new_phone_model_for_client", "is_high_amount_vs_client"]
+    },
+    {
+      "name": "weekend_x_high_amount",
+      "type": "product",
+      "inputs": ["is_weekend", "is_high_amount_vs_client"]
+    },
+    {
+      "name": "high_amount_x_new_os",
+      "type": "product",
+      "inputs": ["is_high_amount_vs_client", "is_new_os_for_client"]
+    },
+    {
+      "name": "first_tx_x_high_amount",
+      "type": "product",
+      "inputs": ["is_first_tx_for_client", "is_high_amount_global"]
+    },
+    {
+      "name": "new_target_x_high_fraud_target",
+      "type": "product",
+      "inputs": ["is_new_target_for_client", "target_fraud_rate_past_smooth"]
+    },
+    {
+      "name": "risk_score",
+      "type": "sum",
+      "inputs": [
+        "is_high_amount_vs_client",
+        "is_new_target_for_client",
+        "is_night_tx",
+        "is_new_phone_model_for_client"
+      ]
+    },
+    {
+      "name": "risk_x_target_fraud",
+      "type": "product",
+      "inputs": ["risk_score", "target_fraud_rate_past_smooth"]
+    }
+  ],
+  "categorical_features": [
+    "last_phone_model",
+    "last_os"
+  ],
+  "drop_features": [
+    "cst_id",
+    "trans_id",
+    "trans_date",
+    "trans_datetime",
+    "target_id",
+    "label",
+    "hour",
+    "day_of_week",
+    "prev_transdatetime",
+    "amount_cum_sum",
+    "target_fraud_cum_sum",
+    "cst_night_tx_cumsum",
+    "cst_weekend_tx_cumsum"
+  ]
+}

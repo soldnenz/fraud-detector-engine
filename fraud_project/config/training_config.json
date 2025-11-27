@@ -1,0 +1,16 @@
+{
+  "train_window_days": null,
+  "train_end_date": "2025-11-22",
+  "min_date": null,
+  "fp_cost_ratio": 0.1,
+  "fn_cost_ratio": 1.0,
+  "n_folds": 5,
+  "model_name": "ultimate_v8",
+  "version": "2025-11-22_01",
+  "models_dir": "data/models/ultimate_v8",
+  "features_config_path": "config/features_config.json",
+  "thresholds_config_path": "config/thresholds_config.json",
+  "transactions_path": "../transactions.csv",
+  "behavior_path": "../customer_behavior.csv"
+}
+
